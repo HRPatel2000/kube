@@ -1,11 +1,5 @@
 buildscript {
 
-    ext {
-        springBootVersion = '2.2.1.RELEASE'
-        springCloudVersion = '2.2.1.RELEASE'
-        springBootAdminVersion = '2.2.1'
-    }
-
     String buildNumber = System.getProperty("buildNumber")
     if (buildNumber == null) {
 
@@ -17,11 +11,15 @@ buildscript {
     }
 
     ext {
+        springBootVersion = '2.2.1.RELEASE'
+        springCloudVersion = '2.2.1.RELEASE'
+        springBootAdminVersion = '2.2.1'
 
         kubeBuildNumber = buildNumber
         buildTime = new Date().format("yyyy-MM-dd HH:mm:ss")
         gitTagName = project.version
     }
+
     println "BuildNumber >>> " + kubeBuildNumber
     println "BuildTime >>> " + buildTime
 
@@ -85,6 +83,7 @@ apply plugin: io.spring.gradle.dependencymanagement.DependencyManagementPlugin
 apply plugin: net.linguica.gradle.maven.settings.MavenSettingsPlugin
 apply plugin: net.researchgate.release.ReleasePlugin
 apply plugin: com.gorylenko.GitPropertiesPlugin
+apply plugin: com.palantir.gradle.gitversion.GitVersionPlugin
 apply plugin: org.asciidoctor.gradle.AsciidoctorPlugin
 
 sourceCompatibility = 1.8
@@ -102,6 +101,9 @@ springBoot {
     }
 }
 
+
+def details = versionDetails()
+
 println "|||GIT State||| :-> $project.name"
 println "<<<"
 println "\tProject Name :-> $project.name"
@@ -110,9 +112,9 @@ println "\tBuild No# :-> $project.kubeBuildNumber"
 //println "\tGIT Latest TAG :-> " + details.lastTag
 println "\tNEW GIT <<<TAG Name>>> :-> $project.gitTagName"
 //println "\tGIT Commit Distance :-> " + details.commitDistance
-//println "\tGIT Hash :-> " + details.gitHash
-//println "\tGIT Branch Name :-> " + details.branchName
-//println "\tGIT Branch is Clean for New TAG??? :-> " + details.isCleanTag
+println "\tGIT Hash :-> " + details.gitHash
+println "\tGIT Branch Name :-> " + details.branchName
+println "\tGIT Branch is Clean for New TAG??? :-> " + details.isCleanTag
 println ">>>"
 
 println "CALLER@Gradle@buildNumber >>> " + project.kubeBuildNumber
